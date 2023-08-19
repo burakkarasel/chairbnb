@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  reservations-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: yarn start:dev reservations
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app
+    deploy:
+      mode: replicated
+      replicas: 1
