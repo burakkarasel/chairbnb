@@ -9,33 +9,35 @@ export class ReservationService {
   constructor(private readonly reservationRepository: ReservationRepository) {}
   async create(
     createReservationDto: CreateReservationDto,
+    userId: string,
   ): Promise<ReservationDocument> {
     return this.reservationRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
-      userId: "123",
+      userId,
     });
   }
 
-  async findAll(): Promise<object[]> {
-    return this.reservationRepository.find({});
+  async findAll(userId: string): Promise<object[]> {
+    return this.reservationRepository.find({ userId });
   }
 
-  async findOne(_id: string): Promise<object> {
-    return this.reservationRepository.findOne({ _id });
+  async findOne(_id: string, userId: string): Promise<object> {
+    return this.reservationRepository.findOne({ _id, userId });
   }
 
   async update(
     _id: string,
     updateReservationDto: UpdateReservationDto,
+    userId: string,
   ): Promise<object> {
     return this.reservationRepository.findOneAndUpdate(
-      { _id },
+      { _id, userId },
       { $set: updateReservationDto },
     );
   }
 
-  async remove(_id: string): Promise<void> {
-    return this.reservationRepository.findOneAndDelete({ _id });
+  async remove(_id: string, userId: string): Promise<void> {
+    return this.reservationRepository.findOneAndDelete({ _id, userId });
   }
 }

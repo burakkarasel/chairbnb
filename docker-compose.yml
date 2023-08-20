@@ -27,7 +27,7 @@ services:
       - ./apps/auth/.env
     restart: always
     ports:
-      - "8001:8000"
+      - "8001:8001"
     volumes:
       - .:/usr/src/app
     deploy:

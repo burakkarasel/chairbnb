@@ -19,7 +19,8 @@ import { JwtStrategy, LocalStrategy } from "./strategy";
         MONGO_URI: Joi.string().required(),
         SECRET_KEY: Joi.string().required(),
         EXPIRES_IN: Joi.number().required(),
-        PORT: Joi.number().required(),
+        HTTP_PORT: Joi.number().required(),
+        TCP_PORT: Joi.number().required(),
       }),
     }),
     JwtModule.registerAsync({

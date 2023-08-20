@@ -1,9 +1,10 @@
 import { Controller, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { LocalAuthGuard } from "./guard";
-import { CurrentUser } from "./decorator";
+import { JwtAuthGuard, LocalAuthGuard } from "./guard";
+import { CurrentUser } from "@app/common";
 import { UserDocument } from "./user/model/user.model";
 import { Response } from "express";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 
 @Controller("api/v1/auth")
 export class AuthController {
@@ -17,5 +18,13 @@ export class AuthController {
   ) {
     await this.authService.login(user, res);
     res.send(user);
+  }
+
+  // this is only for checking if the received RPC is an authorized request
+  // it listens to the authenticate message
+  @UseGuards(JwtAuthGuard)
+  @MessagePattern("authenticate")
+  async authenticate(@Payload() data: any) {
+    return data;
   }
 }

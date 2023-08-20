@@ -4,9 +4,11 @@ import { ReservationController } from "./reservation.controller";
 import { DatabaseModule } from "@app/common";
 import { ReservationRepository } from "./reservation.repository";
 import { ReservationDocument, ReservationSchema } from "./models";
-import { LoggerModule } from "@app/common/logger";
-import { ConfigModule } from "@nestjs/config";
+import { LoggerModule } from "@app/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { AUTH_SERVICE } from "@app/common";
 
 @Module({
   imports: [
@@ -22,6 +24,20 @@ import * as Joi from "joi";
         PORT: Joi.number().required(),
       }),
     }),
+    ClientsModule.registerAsync([
+      {
+        name: AUTH_SERVICE,
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.getOrThrow("AUTH_HOST"),
+            port: configService.getOrThrow("AUTH_PORT"),
+          },
+        }),
+        imports: [ConfigModule],
+        inject: [ConfigService],
+      },
+    ]),
   ],
   controllers: [ReservationController],
   providers: [ReservationService, ReservationRepository],
