@@ -2,11 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationRepository } from "./reservation.repository";
+import { ReservationDocument } from "./models";
 
 @Injectable()
 export class ReservationService {
   constructor(private readonly reservationRepository: ReservationRepository) {}
-  create(createReservationDto: CreateReservationDto) {
+  async create(
+    createReservationDto: CreateReservationDto,
+  ): Promise<ReservationDocument> {
     return this.reservationRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
@@ -14,22 +17,25 @@ export class ReservationService {
     });
   }
 
-  findAll() {
+  async findAll(): Promise<object[]> {
     return this.reservationRepository.find({});
   }
 
-  findOne(_id: string) {
+  async findOne(_id: string): Promise<object> {
     return this.reservationRepository.findOne({ _id });
   }
 
-  update(_id: string, updateReservationDto: UpdateReservationDto) {
+  async update(
+    _id: string,
+    updateReservationDto: UpdateReservationDto,
+  ): Promise<object> {
     return this.reservationRepository.findOneAndUpdate(
       { _id },
       { $set: updateReservationDto },
     );
   }
 
-  remove(_id: string) {
+  async remove(_id: string): Promise<void> {
     return this.reservationRepository.findOneAndDelete({ _id });
   }
 }
