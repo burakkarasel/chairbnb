@@ -7,9 +7,27 @@ services:
       dockerfile: ./apps/reservations/Dockerfile
       target: development
     command: yarn start:dev reservations
+    env_file:
+      - ./apps/reservations/.env
     restart: always
     ports:
       - "8000:8000"
+    volumes:
+      - .:/usr/src/app
+    deploy:
+      mode: replicated
+      replicas: 1
+  auth-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: yarn start:dev auth
+    env_file:
+      - ./apps/auth/.env
+    restart: always
+    ports:
+      - "8001:8000"
     volumes:
       - .:/usr/src/app
     deploy:

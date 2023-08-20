@@ -1,4 +1,4 @@
-import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { FilterQuery, FlattenMaps, Model, Types, UpdateQuery } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { Logger, NotFoundException } from "@nestjs/common";
 
@@ -11,7 +11,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return (await created.save()).toJSON() as unknown as TDocument;
   }
 
-  async findOne(filterQuery: FilterQuery<TDocument>): Promise<object> {
+  async findOne(
+    filterQuery: FilterQuery<TDocument>,
+  ): Promise<FlattenMaps<TDocument>> {
     const doc = await this.model.findOne(
       filterQuery,
       {},
@@ -32,7 +34,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async findOneAndUpdate(
     filterQuery: FilterQuery<TDocument>,
     updateQuery: UpdateQuery<TDocument>,
-  ): Promise<object> {
+  ): Promise<FlattenMaps<TDocument>> {
     const doc = await this.model.findOneAndUpdate(filterQuery, updateQuery, {
       lean: true,
       // so it returns the newly updated doc
@@ -46,7 +48,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return doc;
   }
 
-  async find(filterQuery: FilterQuery<TDocument>): Promise<object[]> {
+  async find(
+    filterQuery: FilterQuery<TDocument>,
+  ): Promise<FlattenMaps<TDocument>[]> {
     return this.model.find(filterQuery, {}, { lean: true });
   }
 
