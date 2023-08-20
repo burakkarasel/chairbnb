@@ -11,8 +11,16 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return (await created.save()).toJSON() as unknown as TDocument;
   }
 
-  async findOne(filterQuery: FilterQuery<TDocument>) {
-    const doc = await this.model.findOne(filterQuery, {}, { lean: true });
+  async findOne(filterQuery: FilterQuery<TDocument>): Promise<object> {
+    const doc = await this.model.findOne(
+      filterQuery,
+      {},
+      {
+        // lean makes the mongoose return plain object instead of casting the document into mongoose model
+        // it's more performant
+        lean: true,
+      },
+    );
 
     if (!doc) {
       this.logger.warn("Document not found with filterQuery ", filterQuery);
@@ -24,7 +32,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async findOneAndUpdate(
     filterQuery: FilterQuery<TDocument>,
     updateQuery: UpdateQuery<TDocument>,
-  ) {
+  ): Promise<object> {
     const doc = await this.model.findOneAndUpdate(filterQuery, updateQuery, {
       lean: true,
       // so it returns the newly updated doc
@@ -38,12 +46,12 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return doc;
   }
 
-  async find(filterQuery: FilterQuery<TDocument>) {
+  async find(filterQuery: FilterQuery<TDocument>): Promise<object[]> {
     return this.model.find(filterQuery, {}, { lean: true });
   }
 
   async findOneAndDelete(filterQuery: FilterQuery<TDocument>): Promise<void> {
-    const doc = await this.model.findOneAndDelete(filterQuery);
+    const doc = await this.model.findOneAndDelete(filterQuery, { lean: true });
 
     if (!doc) {
       this.logger.warn("Document not found with filterQuery ", filterQuery);
