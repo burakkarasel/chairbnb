@@ -21,7 +21,7 @@ export class AuthController {
   }
 
   // this is only for checking if the received RPC is an authorized request
-  // it listens to the authenticate message
+  // it listens to the authenticate message and returns the payload
   @UseGuards(JwtAuthGuard)
   @MessagePattern("authenticate")
   async authenticate(@Payload() data: any) {
