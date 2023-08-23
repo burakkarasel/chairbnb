@@ -33,3 +33,19 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+  payments-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: yarn start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    restart: always
+    ports:
+      - "8003:8003"
+    volumes:
+      - .:/usr/src/app
+    deploy:
+      mode: replicated
+      replicas: 1
