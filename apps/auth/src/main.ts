@@ -14,7 +14,7 @@ async function bootstrap() {
     options: { host: "0.0.0.0", port: configService.getOrThrow("TCP_PORT") },
   });
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
   await app.startAllMicroservices();
   await app.listen(configService.getOrThrow("HTTP_PORT"));

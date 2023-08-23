@@ -4,9 +4,7 @@ import { UserDto } from "../dto";
 export const CurrentUser = createParamDecorator(
   (data: string, ctx: ExecutionContext): UserDto | string => {
     const req = ctx.switchToHttp().getRequest();
-    if (data) {
-      return req.user[data];
-    }
-    return req.user;
+    // if field is provided we return the specified field, otherwise we return the whole object
+    return data ? req.user[data] : req.user;
   },
 );

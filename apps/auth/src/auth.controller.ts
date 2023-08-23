@@ -12,11 +12,12 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post()
-  async login(
+  async signIn(
     @CurrentUser() user: UserDocument,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.authService.login(user, res);
+    await this.authService.signIn(user, res);
+    delete user.password;
     res.send(user);
   }
 
@@ -25,6 +26,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @MessagePattern("authenticate")
   async authenticate(@Payload() data: any) {
-    return data;
+    return data.user;
   }
 }

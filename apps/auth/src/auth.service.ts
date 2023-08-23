@@ -11,13 +11,14 @@ export class AuthService {
     private configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
-  async login(user: UserDocument, res: Response) {
+  async signIn(user: UserDocument, res: Response) {
     const payload: JwtPayload = {
       userId: user._id.toHexString(),
       email: user.email,
     };
 
     const token = await this.signToken(payload);
+    // providing expiration for cookie
     const expires = new Date();
     expires.setSeconds(
       expires.getSeconds() + this.configService.getOrThrow("EXPIRES_IN"),

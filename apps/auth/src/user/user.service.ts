@@ -18,10 +18,12 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
     await this.validateUserCreateDto(createUserDto);
-    return this.userRepository.create({
+    const user = await this.userRepository.create({
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
     });
+    delete user.password;
+    return user;
   }
 
   private async validateUserCreateDto(createUserDto: CreateUserDto) {
