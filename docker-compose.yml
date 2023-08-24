@@ -49,3 +49,19 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+  notifications-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: yarn start:dev notifications
+    env_file:
+      - ./apps/notifications/.env
+    restart: always
+    ports:
+      - "8004:8004"
+    volumes:
+      - .:/usr/src/app
+    deploy:
+      mode: replicated
+      replicas: 1
