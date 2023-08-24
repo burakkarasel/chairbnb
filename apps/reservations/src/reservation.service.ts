@@ -3,7 +3,7 @@ import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationRepository } from "./reservation.repository";
 import { ReservationDocument } from "./models";
-import { PAYMENT_SERVICE } from "@app/common";
+import { PAYMENT_SERVICE, UserDto } from "@app/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Observable, map } from "rxjs";
 import { FlattenMaps } from "mongoose";
@@ -16,20 +16,20 @@ export class ReservationService {
   ) {}
   async create(
     createReservationDto: CreateReservationDto,
-    userId: string,
+    { email, _id: userId }: UserDto,
   ): Promise<Observable<Promise<ReservationDocument>>> {
-    return this.paymentService
-      .send("createCharge", createReservationDto.charge)
-      .pipe(
-        map(async (res) => {
-          return this.reservationRepository.create({
-            ...createReservationDto,
-            timestamp: new Date(),
-            userId,
-            invoiceId: res._id,
-          });
-        }),
-      );
+    const payload = { ...createReservationDto.charge, email };
+    console.log("\npayload is:\n", payload);
+    return this.paymentService.send("createCharge", payload).pipe(
+      map(async (res) => {
+        return this.reservationRepository.create({
+          ...createReservationDto,
+          timestamp: new Date(),
+          userId,
+          invoiceId: res._id,
+        });
+      }),
+    );
   }
 
   async findAll(userId: string): Promise<FlattenMaps<ReservationDocument>[]> {

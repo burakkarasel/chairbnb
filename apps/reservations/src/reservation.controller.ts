@@ -15,7 +15,8 @@ import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationDocument } from "./models";
 import { JwtAuthGuard } from "@app/common/auth/jwt-auth.guard";
-import { CurrentUser } from "@app/common";
+import { CurrentUser, UserDto } from "@app/common";
+import { Observable } from "rxjs";
 
 @Controller("api/v1/reservations")
 export class ReservationController {
@@ -25,9 +26,9 @@ export class ReservationController {
   @Post()
   async create(
     @Body() createReservationDto: CreateReservationDto,
-    @CurrentUser("_id") userId: string,
-  ): Promise<ReservationDocument> {
-    return this.reservationService.create(createReservationDto, userId);
+    @CurrentUser() dto: UserDto,
+  ): Promise<Observable<Promise<ReservationDocument>>> {
+    return this.reservationService.create(createReservationDto, dto);
   }
 
   @UseGuards(JwtAuthGuard)
