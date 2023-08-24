@@ -4,6 +4,8 @@ import { NotificationsService } from "./notifications.service";
 import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
 import { DatabaseModule, LoggerModule } from "@app/common";
+import { NotificationRepository } from "./notification.repository";
+import { NotificationDocument, NotificationSchema } from "./model";
 
 @Module({
   imports: [
@@ -20,8 +22,11 @@ import { DatabaseModule, LoggerModule } from "@app/common";
     }),
     LoggerModule,
     DatabaseModule,
+    DatabaseModule.forFeature([
+      { name: NotificationDocument.name, schema: NotificationSchema },
+    ]),
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
+  providers: [NotificationsService, NotificationRepository],
 })
 export class NotificationsModule {}

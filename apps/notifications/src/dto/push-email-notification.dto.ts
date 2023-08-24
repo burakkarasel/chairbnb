@@ -6,4 +6,7 @@ export class PushEmailNotificationDto {
   @IsString()
   @IsNotEmpty()
   text: string;
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

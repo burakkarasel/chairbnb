@@ -18,8 +18,7 @@ export class ReservationService {
     createReservationDto: CreateReservationDto,
     { email, _id: userId }: UserDto,
   ): Promise<Observable<Promise<ReservationDocument>>> {
-    const payload = { ...createReservationDto.charge, email };
-    console.log("\npayload is:\n", payload);
+    const payload = { ...createReservationDto.charge, email, userId };
     return this.paymentService.send("createCharge", payload).pipe(
       map(async (res) => {
         return this.reservationRepository.create({

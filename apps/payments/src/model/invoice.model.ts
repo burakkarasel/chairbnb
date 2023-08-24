@@ -11,6 +11,8 @@ export class InvoiceDocument extends AbstractDocument {
   timestamp: Date;
   @Prop()
   stripeId: string;
+  @Prop()
+  userId: string;
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(InvoiceDocument);

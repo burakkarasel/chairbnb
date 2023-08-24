@@ -2,10 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { PushEmailNotificationDto } from "./dto";
 import * as nodemailer from "nodemailer";
 import { ConfigService } from "@nestjs/config";
+import { NotificationRepository } from "./notification.repository";
+import { EmailTypes } from "@app/common";
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly notificationRepository: NotificationRepository,
+  ) {}
   private readonly transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -16,11 +21,24 @@ export class NotificationsService {
       refreshToken: this.configService.getOrThrow("GOOGLE_OAUTH_REFRESH_TOKEN"),
     },
   });
-  async pushEmailNotification({ email, text }: PushEmailNotificationDto) {
+  async pushEmailNotification({
+    email,
+    text,
+    userId,
+  }: PushEmailNotificationDto) {
+    const subject = "Chairbnb New Reservation";
+    await this.notificationRepository.create({
+      text,
+      userId,
+      to: email,
+      type: EmailTypes.INFORMAL_EMAIL,
+      subject,
+      timestamp: new Date(),
+    });
     await this.transporter.sendMail({
       from: this.configService.getOrThrow("SMTP_USER"),
       to: email,
-      subject: "Chairbnb New Reservation",
+      subject,
       text,
     });
   }

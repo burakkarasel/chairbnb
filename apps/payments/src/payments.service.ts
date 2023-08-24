@@ -25,6 +25,7 @@ export class PaymentsService {
     card,
     amount,
     email,
+    userId,
   }: PaymentCreateChargeDto): Promise<InvoiceDocument> {
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount: amount * 100,
@@ -39,13 +40,18 @@ export class PaymentsService {
       amount,
       timestamp: new Date(),
       stripeId: paymentIntent.id,
+      userId,
     });
 
     const text = `Recevied payment for your newly order.\n We charged you ${amount}$, from your card that ends with "${card.number
       .toString()
       .slice(12)}".`;
 
-    this.notificationService.emit("pushEmailNotification", { email, text });
+    this.notificationService.emit("pushEmailNotification", {
+      email,
+      text,
+      userId,
+    });
 
     return invoice;
   }
