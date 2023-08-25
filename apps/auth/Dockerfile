@@ -11,7 +11,7 @@ COPY nest-cli.json nest-cli.json
 
 # install all dependencies
 RUN yarn install
-RUN yarn install semver
+RUN yarn add semver
 
 COPY apps/auth apps/auth
 COPY libs libs
