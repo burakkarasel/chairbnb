@@ -1,0 +1,53 @@
+steps:
+  # reservations microservice
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/charibnb/reservations/prod",
+        "-f",
+        "apps/reservations/Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "europe-west1-docker.pkg.dev/charibnb/reservations/prod"]
+  # auth microservice
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/charibnb/auth/prod",
+        "-f",
+        "apps/auth/Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "europe-west1-docker.pkg.dev/charibnb/auth/prod"]
+  # notifications microservice
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/charibnb/notifications/prod",
+        "-f",
+        "apps/notifications/Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "europe-west1-docker.pkg.dev/charibnb/notifications/prod"]
+  # payments microservice
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/charibnb/payments/prod",
+        "-f",
+        "apps/payments/Dockerfile",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "europe-west1-docker.pkg.dev/charibnb/payments/prod"]
