@@ -16,7 +16,6 @@ COPY apps/auth apps/auth
 COPY libs libs
 
 RUN cd apps/auth && yarn install
-RUN yarn add semver
 
 # build the app
 RUN yarn build auth
@@ -34,6 +33,7 @@ COPY yarn.lock ./
 
 # install only prod dependencies not dev dependencies
 RUN yarn install --prod
+RUN yarn add semver
 
 COPY --from=development /usr/src/app/dist ./dist
 
