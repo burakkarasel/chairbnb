@@ -11,12 +11,12 @@ COPY nest-cli.json nest-cli.json
 
 # install all dependencies
 RUN yarn install
-RUN yarn add semver
 
 COPY apps/auth apps/auth
 COPY libs libs
 
 RUN cd apps/auth && yarn install
+RUN yarn add semver
 
 # build the app
 RUN yarn build auth
