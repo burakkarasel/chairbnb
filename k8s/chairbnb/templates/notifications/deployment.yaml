@@ -23,3 +23,27 @@ spec:
                 secretKeyRef:
                   name: mongodb
                   key: connectionString
+            - name: PORT
+              value: "8000"
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: smtpUser
+            - name: GOOGLE_OAUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: googleOauthClientId
+            - name: GOOGLE_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: googleOauthClientSecret
+            - name: GOOGLE_OAUTH_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: googleOauthRefreshToken
+          ports:
+            - containerPort: 8000

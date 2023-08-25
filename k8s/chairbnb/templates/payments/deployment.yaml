@@ -23,3 +23,16 @@ spec:
                 secretKeyRef:
                   name: mongodb
                   key: connectionString
+            - name: PORT
+              value: "8001"
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe
+                  key: stripeSecretKey
+            - name: NOTIFICATIONS_HOST
+              value: notifications
+            - name: NOTIFICATIONS_PORT
+              value: "8000"
+          ports:
+            - containerPort: 8001
