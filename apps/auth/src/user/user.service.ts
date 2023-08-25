@@ -9,7 +9,7 @@ import { UserRepository } from "./user.repository";
 import * as bcrypt from "bcryptjs";
 import { Logger } from "@nestjs/common";
 import { FlattenMaps } from "mongoose";
-import { UserDocument } from "./model/user.model";
+import { UserDocument } from "@app/common";
 
 @Injectable()
 export class UserService {

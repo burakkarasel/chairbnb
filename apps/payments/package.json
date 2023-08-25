@@ -1,0 +1,12 @@
+{
+  "name": "@chairbnb/payments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "stripe": "^13.2.0"
+  },
+  "devDependencies": {
+    "@types/stripe": "^8.0.417"
+  }
+}

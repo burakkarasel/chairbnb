@@ -6,14 +6,19 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY yarn.lock ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
 # install all dependencies
-RUN yarn install
+RUN yarn install 
 
-COPY . .
+COPY apps/notifications apps/notifications
+COPY libs libs
+
+RUN cd apps/notifications && yarn install
 
 # build the app
-RUN yarn build
+RUN yarn build notifications
 
 # prod stage
 FROM node:alpine AS production
