@@ -1,0 +1,46 @@
+services:
+  e2e:
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./specs:/usr/src/app/specs
+    depends_on:
+      - reservations-microservice
+      - auth-microservice
+      - payments-microservice
+      - notifications-microservice
+      - mongo
+  reservations-microservice:
+    image: europe-west1-docker.pkg.dev/charibnb/reservations/prod
+    env_file:
+      - ../apps/reservations/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+  auth-microservice:
+    image: europe-west1-docker.pkg.dev/charibnb/auth/prod
+    env_file:
+      - ../apps/auth/.env
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongo
+  payments-microservice:
+    image: europe-west1-docker.pkg.dev/charibnb/payments/prod
+    env_file:
+      - ../apps/payments/.env
+    ports:
+      - "8003:8003"
+    depends_on:
+      - mongo
+  notifications-microservice:
+    image: europe-west1-docker.pkg.dev/charibnb/notifications/prod
+    env_file:
+      - ../apps/notifications/.env
+    ports:
+      - "8004:8004"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo

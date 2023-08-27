@@ -16,9 +16,8 @@ export class AuthController {
     @CurrentUser() user: UserDocument,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.authService.signIn(user, res);
-    delete user.password;
-    res.send(user);
+    const jwt = await this.authService.signIn(user, res);
+    res.send(jwt);
   }
 
   // this is only for checking if the received RPC is an authorized request

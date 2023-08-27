@@ -11,7 +11,7 @@ export class AuthService {
     private configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
-  async signIn(user: UserDocument, res: Response) {
+  async signIn(user: UserDocument, res: Response): Promise<string> {
     const payload: JwtPayload = {
       userId: user._id.toHexString(),
       email: user.email,
@@ -28,6 +28,8 @@ export class AuthService {
       httpOnly: true,
       expires,
     });
+
+    return token;
   }
 
   async signToken(payload: JwtPayload): Promise<string> {

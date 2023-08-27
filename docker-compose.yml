@@ -65,3 +65,5 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+  mongo:
+    image: mongo
