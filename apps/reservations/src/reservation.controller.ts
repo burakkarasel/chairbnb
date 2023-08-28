@@ -15,7 +15,7 @@ import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationDocument } from "./models";
 import { JwtAuthGuard } from "@app/common/auth/jwt-auth.guard";
-import { CurrentUser, UserDto } from "@app/common";
+import { CurrentUser, Roles, UserDto } from "@app/common";
 import { Observable } from "rxjs";
 
 @Controller("api/v1/reservations")
@@ -59,6 +59,7 @@ export class ReservationController {
   @UseGuards(JwtAuthGuard)
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Roles("admin")
   async remove(
     @Param("id") id: string,
     @CurrentUser("_id") userId: string,
