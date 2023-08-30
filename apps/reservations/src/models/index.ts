@@ -1,1 +1,1 @@
-export * from "./reservation.model";
+export * from "./reservation.entity";
