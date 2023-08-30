@@ -16,7 +16,7 @@ export class User extends AbstractEntity<User> {
   email: string;
   @Column()
   password: string;
-  @ManyToMany(() => Role, { cascade: true, eager: true })
+  @ManyToMany(() => Role, { cascade: true })
   @JoinTable()
   roles?: Role[];
   @Column({ name: "created_at", type: "timestamptz" })

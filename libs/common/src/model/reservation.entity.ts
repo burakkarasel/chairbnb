@@ -19,7 +19,7 @@ export class Reservation extends AbstractEntity<Reservation> {
   @Column({ name: "end_date", type: "timestamptz" })
   endDate: Date;
   @JoinColumn({ name: "user_id" })
-  @ManyToOne(() => User, (user) => user.reservations, { eager: true })
+  @ManyToOne(() => User, (user) => user.reservations)
   user: User;
   @Column({ name: "place_id" })
   placeId: string;

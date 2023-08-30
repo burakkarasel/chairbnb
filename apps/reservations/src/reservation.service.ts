@@ -36,11 +36,17 @@ export class ReservationService {
   }
 
   async findAll(user: User): Promise<Reservation[]> {
-    return this.reservationRepository.find({ user: { id: user.id } });
+    return this.reservationRepository.find(
+      { user: { id: user.id } },
+      { user: true },
+    );
   }
 
   async findOne(id: string, user: User): Promise<Reservation> {
-    return this.reservationRepository.findOne({ id, user: { id: user.id } });
+    return this.reservationRepository.findOne(
+      { id, user: { id: user.id } },
+      { user: true, invoice: true },
+    );
   }
 
   async update(
