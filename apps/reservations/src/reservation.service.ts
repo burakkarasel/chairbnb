@@ -3,7 +3,7 @@ import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationRepository } from "./reservation.repository";
 import { Reservation } from "./models";
-import { PAYMENT_SERVICE, UserDto } from "@app/common";
+import { PAYMENT_SERVICE, User } from "@app/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Observable, map } from "rxjs";
 
@@ -15,7 +15,7 @@ export class ReservationService {
   ) {}
   async create(
     createReservationDto: CreateReservationDto,
-    { email, _id: userId }: UserDto,
+    { email, id: userId }: User,
   ): Promise<Observable<Promise<Reservation>>> {
     const payload = { ...createReservationDto.charge, email, userId };
     return this.paymentService.send("createCharge", payload).pipe(

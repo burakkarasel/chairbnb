@@ -15,7 +15,7 @@ import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { Reservation } from "./models";
 import { JwtAuthGuard } from "@app/common/auth/jwt-auth.guard";
-import { CurrentUser, Roles, UserDto } from "@app/common";
+import { CurrentUser, Roles, User } from "@app/common";
 import { Observable } from "rxjs";
 
 @Controller("api/v1/reservations")
@@ -26,7 +26,7 @@ export class ReservationController {
   @Post()
   async create(
     @Body() createReservationDto: CreateReservationDto,
-    @CurrentUser() dto: UserDto,
+    @CurrentUser() dto: User,
   ): Promise<Observable<Promise<Reservation>>> {
     return this.reservationService.create(createReservationDto, dto);
   }
@@ -41,7 +41,7 @@ export class ReservationController {
   @Get(":id")
   async findOne(
     @Param("id") id: string,
-    @CurrentUser("_id") userId: string,
+    @CurrentUser("id") userId: string,
   ): Promise<Reservation> {
     return this.reservationService.findOne(id, userId);
   }
@@ -51,7 +51,7 @@ export class ReservationController {
   async update(
     @Param("id") id: string,
     @Body() updateReservationDto: UpdateReservationDto,
-    @CurrentUser("_id") userId: string,
+    @CurrentUser("id") userId: string,
   ): Promise<Reservation> {
     return this.reservationService.update(id, updateReservationDto, userId);
   }
@@ -62,7 +62,7 @@ export class ReservationController {
   @Roles("admin")
   async remove(
     @Param("id") id: string,
-    @CurrentUser("_id") userId: string,
+    @CurrentUser("id") userId: string,
   ): Promise<void> {
     await this.reservationService.remove(id, userId);
   }

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserDocument } from "@app/common";
+import { User } from "@app/common";
 import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
@@ -11,9 +11,9 @@ export class AuthService {
     private configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
-  async signIn(user: UserDocument, res: Response): Promise<string> {
+  async signIn(user: User, res: Response): Promise<string> {
     const payload: JwtPayload = {
-      userId: user._id.toHexString(),
+      userId: user.id,
       email: user.email,
     };
 

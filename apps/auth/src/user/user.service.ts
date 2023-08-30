@@ -4,41 +4,40 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from "@nestjs/common";
-import { CreateUserDto } from "./dto";
+import { CreateUserDto, RoleDto } from "./dto";
 import { UserRepository } from "./user.repository";
 import * as bcrypt from "bcryptjs";
 import { Logger } from "@nestjs/common";
 import { FlattenMaps } from "mongoose";
-import { UserDocument } from "@app/common";
+import { Role, User } from "@app/common";
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(private readonly userRepository: UserRepository) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
-    await this.validateUserCreateDto(createUserDto);
-    const user = await this.userRepository.create({
-      ...createUserDto,
-      password: await bcrypt.hash(createUserDto.password, 10),
+  async createUser(createUser: CreateUserDto): Promise<User> {
+    await this.validateUserCreateDto(createUser);
+    const userToCreate = new User({
+      ...createUser,
+      password: await bcrypt.hash(createUser.password, 10),
+      roles: createUser.roles?.map((r: RoleDto) => new Role({ ...r })),
     });
+    const user = await this.userRepository.create(userToCreate);
     delete user.password;
     return user;
   }
 
-  private async validateUserCreateDto(createUserDto: CreateUserDto) {
+  private async validateUserCreateDto(createUser: CreateUserDto) {
     try {
-      await this.userRepository.findOne({ email: createUserDto.email });
+      await this.userRepository.findOne({ email: createUser.email });
     } catch (error) {
       return;
     }
     throw new UnprocessableEntityException("Credentials are already taken");
   }
 
-  async verifyUser(
-    email: string,
-    password: string,
-  ): Promise<FlattenMaps<UserDocument>> {
+  async verifyUser(email: string, password: string): Promise<User> {
     const user = await this.userRepository.findOne({ email });
     if (!user) {
       this.logger.warn(`${email} tried to log in to a non-existing account`);
@@ -52,8 +51,8 @@ export class UserService {
     return user;
   }
 
-  async findById(_id: string): Promise<FlattenMaps<UserDocument>> {
-    const user = this.userRepository.findOne({ _id });
+  async findById(id: string): Promise<FlattenMaps<User>> {
+    const user = this.userRepository.findOne({ id });
     if (!user) {
       throw new NotFoundException("User not found!");
     }

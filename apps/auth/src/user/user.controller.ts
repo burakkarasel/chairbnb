@@ -8,13 +8,13 @@ import { CurrentUser } from "@app/common";
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  async createUser(@Body() createUser: CreateUserDto) {
+    return this.userService.createUser(createUser);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findUserById(@CurrentUser("_id") id: string) {
+  async findUserById(@CurrentUser("id") id: string) {
     return this.userService.findById(id);
   }
 }

@@ -10,6 +10,7 @@ import { Observable, catchError, map, of, tap } from "rxjs";
 import { AUTH_SERVICE } from "../constants/services";
 import { ClientProxy } from "@nestjs/microservices";
 import { Reflector } from "@nestjs/core";
+import { Role } from "../model";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -42,7 +43,7 @@ export class JwtAuthGuard implements CanActivate {
           if (roles) {
             // if it's we loop through the required roles
             for (const role of roles) {
-              if (!res.roles?.includes(role)) {
+              if (!res.roles?.map((r: Role) => r.name).includes(role)) {
                 // if role is not available in user's roles we return Unauthorized
                 this.logger.error("The user doesn't have valid roles.");
                 throw new UnauthorizedException();
