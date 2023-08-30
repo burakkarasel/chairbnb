@@ -5,9 +5,10 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   UpdateDateColumn,
 } from "typeorm";
-import { Role } from "./role.entity";
+import { Role, Reservation, Invoice, Notification } from "@app/common";
 
 @Entity()
 export class User extends AbstractEntity<User> {
@@ -15,7 +16,7 @@ export class User extends AbstractEntity<User> {
   email: string;
   @Column()
   password: string;
-  @ManyToMany(() => Role, { cascade: true })
+  @ManyToMany(() => Role, { cascade: true, eager: true })
   @JoinTable()
   roles?: Role[];
   @Column({ name: "created_at", type: "timestamptz" })
@@ -24,4 +25,14 @@ export class User extends AbstractEntity<User> {
   @Column({ name: "updated_at", type: "timestamptz" })
   @UpdateDateColumn()
   updatedAt: Date;
+  @OneToMany(() => Invoice, (invoice) => invoice.user, { cascade: true })
+  invoices: Invoice[];
+  @OneToMany(() => Notification, (notication) => notication.user, {
+    cascade: true,
+  })
+  notifications: Notification[];
+  @OneToMany(() => Reservation, (reservation) => reservation.user, {
+    cascade: true,
+  })
+  reservations: Reservation[];
 }

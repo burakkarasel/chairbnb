@@ -1,5 +1,13 @@
 import { AbstractEntity } from "@app/common/database";
-import { Column, CreateDateColumn, Entity } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+} from "typeorm";
+import { Invoice, User } from "@app/common";
 
 @Entity()
 export class Reservation extends AbstractEntity<Reservation> {
@@ -10,10 +18,12 @@ export class Reservation extends AbstractEntity<Reservation> {
   startDate: Date;
   @Column({ name: "end_date", type: "timestamptz" })
   endDate: Date;
-  @Column({ name: "user_id" })
-  userId: string;
+  @JoinColumn({ name: "user_id" })
+  @ManyToOne(() => User, (user) => user.reservations, { eager: true })
+  user: User;
   @Column({ name: "place_id" })
   placeId: string;
-  @Column({ name: "invoice_id" })
-  invoiceId: string;
+  @OneToOne(() => Invoice, { cascade: true })
+  @JoinColumn({ name: "invoice_id" })
+  invoice: Invoice;
 }

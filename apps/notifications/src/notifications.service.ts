@@ -4,7 +4,7 @@ import * as nodemailer from "nodemailer";
 import { ConfigService } from "@nestjs/config";
 import { NotificationRepository } from "./notification.repository";
 import { EmailTypes } from "@app/common";
-import { Notification } from "./model";
+import { Notification } from "@app/common";
 
 @Injectable()
 export class NotificationsService {
@@ -22,15 +22,11 @@ export class NotificationsService {
       refreshToken: this.configService.getOrThrow("GOOGLE_OAUTH_REFRESH_TOKEN"),
     },
   });
-  async pushEmailNotification({
-    email,
-    text,
-    userId,
-  }: PushEmailNotificationDto) {
+  async pushEmailNotification({ email, text, user }: PushEmailNotificationDto) {
     const subject = "Chairbnb New Reservation";
     const notificationToCreate = new Notification({
       text,
-      userId,
+      user,
       to: email,
       type: EmailTypes.INFORMAL_EMAIL,
       subject,

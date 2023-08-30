@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { CreateReservationDto } from "./dto/create-reservation.dto";
 import { UpdateReservationDto } from "./dto/update-reservation.dto";
 import { ReservationRepository } from "./reservation.repository";
-import { Reservation } from "./models";
+import { Reservation } from "@app/common";
 import { PAYMENT_SERVICE, User } from "@app/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Observable, map } from "rxjs";
@@ -15,42 +15,49 @@ export class ReservationService {
   ) {}
   async create(
     createReservationDto: CreateReservationDto,
-    { email, id: userId }: User,
+    user: User,
   ): Promise<Observable<Promise<Reservation>>> {
-    const payload = { ...createReservationDto.charge, email, userId };
+    const payload = {
+      ...createReservationDto.charge,
+      email: user.email,
+      user,
+    };
     return this.paymentService.send("createCharge", payload).pipe(
       map(async (res) => {
         const reservationToCreate = new Reservation({
           ...createReservationDto,
           timestamp: new Date(),
-          userId,
-          invoiceId: res._id,
+          user,
+          invoice: res,
         });
         return this.reservationRepository.create(reservationToCreate);
       }),
     );
   }
 
-  async findAll(userId: string): Promise<Reservation[]> {
-    return this.reservationRepository.find({ userId });
+  async findAll(user: User): Promise<Reservation[]> {
+    return this.reservationRepository.find({ user: { id: user.id } });
   }
 
-  async findOne(id: string, userId: string): Promise<Reservation> {
-    return this.reservationRepository.findOne({ id, userId });
+  async findOne(id: string, user: User): Promise<Reservation> {
+    return this.reservationRepository.findOne({ id, user: { id: user.id } });
   }
 
   async update(
     id: string,
     updateReservationDto: UpdateReservationDto,
-    userId: string,
+    user: User,
   ): Promise<Reservation> {
     return this.reservationRepository.findOneAndUpdate(
-      { id, userId },
+      { id, user: { id: user.id } },
       updateReservationDto,
     );
   }
 
-  async remove(id: string, userId: string): Promise<void> {
-    return this.reservationRepository.findOneAndDelete({ id, userId });
+  async remove(id: string, user: User): Promise<void> {
+    return this.reservationRepository.findOneAndDelete({
+      id,
+      user: { id: user.id },
+    });
   }
 }

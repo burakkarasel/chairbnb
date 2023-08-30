@@ -1,5 +1,5 @@
 import { AbstractRepository } from "@app/common";
-import { Notification } from "./model";
+import { Notification } from "@app/common";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";

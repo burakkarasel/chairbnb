@@ -7,8 +7,12 @@ import {
   DatabaseModule,
   LoggerModule,
   NOTIFICATION_SERVICE,
+  Invoice,
+  User,
+  Role,
+  Reservation,
+  Notification,
 } from "@app/common";
-import { InvoiceDocument, InvoiceSchema } from "./model";
 import { PaymentsRepository } from "./payments.repository";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 
@@ -18,7 +22,6 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        MONGO_URI: Joi.string().required(),
         PORT: Joi.number().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
         NOTIFICATIONS_HOST: Joi.string().required(),
@@ -26,12 +29,7 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
       }),
     }),
     DatabaseModule,
-    DatabaseModule.forFeature([
-      {
-        name: InvoiceDocument.name,
-        schema: InvoiceSchema,
-      },
-    ]),
+    DatabaseModule.forFeature([Invoice, User, Role, Notification, Reservation]),
     ClientsModule.registerAsync([
       {
         name: NOTIFICATION_SERVICE,

@@ -1,3 +1,4 @@
+import { User } from "@app/common";
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 export class PushEmailNotificationDto {
@@ -6,7 +7,6 @@ export class PushEmailNotificationDto {
   @IsString()
   @IsNotEmpty()
   text: string;
-  @IsString()
   @IsNotEmpty()
-  userId: string;
+  user: User;
 }

@@ -1,9 +1,16 @@
 import { Module } from "@nestjs/common";
 import { ReservationService } from "./reservation.service";
 import { ReservationController } from "./reservation.controller";
-import { DatabaseModule, PAYMENT_SERVICE } from "@app/common";
+import {
+  DatabaseModule,
+  Invoice,
+  PAYMENT_SERVICE,
+  Reservation,
+  Role,
+  User,
+  Notification,
+} from "@app/common";
 import { ReservationRepository } from "./reservation.repository";
-import { Reservation } from "./models";
 import { LoggerModule } from "@app/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
@@ -14,7 +21,7 @@ import { HealthModule } from "@app/common/health/health.module";
 @Module({
   imports: [
     DatabaseModule,
-    DatabaseModule.forFeature([Reservation]),
+    DatabaseModule.forFeature([Reservation, User, Role, Invoice, Notification]),
     LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,

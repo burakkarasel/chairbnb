@@ -8,7 +8,6 @@ import { CreateUserDto, RoleDto } from "./dto";
 import { UserRepository } from "./user.repository";
 import * as bcrypt from "bcryptjs";
 import { Logger } from "@nestjs/common";
-import { FlattenMaps } from "mongoose";
 import { Role, User } from "@app/common";
 
 @Injectable()
@@ -51,7 +50,7 @@ export class UserService {
     return user;
   }
 
-  async findById(id: string): Promise<FlattenMaps<User>> {
+  async findById(id: string): Promise<User> {
     const user = this.userRepository.findOne({ id });
     if (!user) {
       throw new NotFoundException("User not found!");

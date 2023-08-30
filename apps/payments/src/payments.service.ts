@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import Stripe from "stripe";
 import { NOTIFICATION_SERVICE, PaymentCreateChargeDto } from "@app/common";
 import { PaymentsRepository } from "./payments.repository";
-import { InvoiceDocument } from "./model";
+import { Invoice } from "@app/common";
 import { ClientProxy } from "@nestjs/microservices";
 
 @Injectable()
@@ -25,8 +25,8 @@ export class PaymentsService {
     card,
     amount,
     email,
-    userId,
-  }: PaymentCreateChargeDto): Promise<InvoiceDocument> {
+    user,
+  }: PaymentCreateChargeDto): Promise<Invoice> {
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount: amount * 100,
       confirm: true,
@@ -35,13 +35,15 @@ export class PaymentsService {
       return_url: "https://www.google.com/",
     });
 
-    const invoice = await this.paymentsRepository.create({
+    const invoiceToCreate = new Invoice({
       lastFour: card.number.toString().slice(12),
       amount,
       timestamp: new Date(),
       stripeId: paymentIntent.id,
-      userId,
+      user,
     });
+
+    const invoice = await this.paymentsRepository.create(invoiceToCreate);
 
     const text = `Recevied payment for your newly order.\n We charged you ${amount}$, from your card that ends with "${card.number
       .toString()
@@ -50,7 +52,7 @@ export class PaymentsService {
     this.notificationService.emit("pushEmailNotification", {
       email,
       text,
-      userId,
+      user,
     });
 
     return invoice;
