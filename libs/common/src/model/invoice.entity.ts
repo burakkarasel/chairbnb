@@ -1,11 +1,10 @@
-import { AbstractEntity, Reservation, User } from "@app/common";
+import { AbstractEntity, User } from "@app/common";
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
 } from "typeorm";
 
 @Entity()
@@ -22,7 +21,4 @@ export class Invoice extends AbstractEntity<Invoice> {
   @JoinColumn({ name: "user_id" })
   @ManyToOne(() => User, (user) => user.invoices)
   user: User;
-  @OneToOne(() => Reservation, { cascade: true })
-  @JoinColumn({ name: "reservation_id" })
-  reservation: Reservation;
 }

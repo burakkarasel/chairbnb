@@ -37,10 +37,10 @@ import { HealthModule } from "@app/common/health/health.module";
       {
         name: AUTH_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.getOrThrow("AUTH_HOST"),
-            port: configService.getOrThrow("AUTH_PORT"),
+            urls: [configService.getOrThrow<string>("RABBITMQ_URI")],
+            queue: "auth",
           },
         }),
         imports: [ConfigModule],
@@ -49,10 +49,10 @@ import { HealthModule } from "@app/common/health/health.module";
       {
         name: PAYMENT_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.getOrThrow("PAYMENTS_HOST"),
-            port: configService.getOrThrow("PAYMENTS_PORT"),
+            urls: [configService.getOrThrow<string>("RABBITMQ_URI")],
+            queue: "payments",
           },
         }),
         imports: [ConfigModule],
