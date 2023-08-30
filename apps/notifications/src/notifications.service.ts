@@ -4,6 +4,7 @@ import * as nodemailer from "nodemailer";
 import { ConfigService } from "@nestjs/config";
 import { NotificationRepository } from "./notification.repository";
 import { EmailTypes } from "@app/common";
+import { Notification } from "./model";
 
 @Injectable()
 export class NotificationsService {
@@ -27,14 +28,14 @@ export class NotificationsService {
     userId,
   }: PushEmailNotificationDto) {
     const subject = "Chairbnb New Reservation";
-    await this.notificationRepository.create({
+    const notificationToCreate = new Notification({
       text,
       userId,
       to: email,
       type: EmailTypes.INFORMAL_EMAIL,
       subject,
-      timestamp: new Date(),
     });
+    await this.notificationRepository.create(notificationToCreate);
     await this.transporter.sendMail({
       from: this.configService.getOrThrow("SMTP_USER"),
       to: email,

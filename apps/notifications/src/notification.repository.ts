@@ -1,16 +1,17 @@
 import { AbstractRepository } from "@app/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { NotificationDocument } from "./model";
-import { Model } from "mongoose";
+import { Notification } from "./model";
 import { Injectable, Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { EntityManager, Repository } from "typeorm";
 
 @Injectable()
-export class NotificationRepository extends AbstractRepository<NotificationDocument> {
+export class NotificationRepository extends AbstractRepository<Notification> {
   protected logger: Logger = new Logger();
   constructor(
-    @InjectModel(NotificationDocument.name)
-    private readonly notificationModel: Model<NotificationDocument>,
+    @InjectRepository(Notification)
+    notificationRepository: Repository<Notification>,
+    entityManager: EntityManager,
   ) {
-    super(notificationModel);
+    super(notificationRepository, entityManager);
   }
 }
