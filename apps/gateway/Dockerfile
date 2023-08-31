@@ -11,13 +11,13 @@ COPY nest-cli.json nest-cli.json
 
 RUN npm install -g pnpm
 
-COPY apps/payments apps/payments
+COPY apps/gateway apps/gateway
 COPY libs libs
 
 RUN pnpm install -r
 
 # build the app
-RUN pnpm run build payments
+RUN pnpm run build gateway
 
 # prod stage
 FROM node:alpine AS production
@@ -37,4 +37,4 @@ RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/apps/payments/main" ]
+CMD [ "node", "dist/apps/gateway/main" ]

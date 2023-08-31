@@ -2,8 +2,10 @@ FROM node:alpine
 
 WORKDIR /usr/src/app
 
+RUN npm install -g pnpm
+
 COPY . .
 
-RUN yarn install
+RUN pnpm install -r
 
-CMD [ "yarn", "test" ]
+CMD [ "pnpm", "test" ]

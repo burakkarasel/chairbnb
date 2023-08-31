@@ -5,18 +5,19 @@ FROM node:alpine AS development
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY pnpm-lock.yaml ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-# install all dependencies
-RUN yarn install
+RUN npm install -g pnpm
 
 COPY apps/reservations apps/reservations
 COPY libs libs
 
+RUN pnpm install -r
+
 # build the app
-RUN yarn build
+RUN pnpm run build reservations
 
 # prod stage
 FROM node:alpine AS production
@@ -27,10 +28,12 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY pnpm-lock.yaml ./
+
+RUN npm install -g pnpm
 
 # install only prod dependencies not dev dependencies
-RUN yarn install --prod
+RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
