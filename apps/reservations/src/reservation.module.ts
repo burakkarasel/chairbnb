@@ -17,11 +17,23 @@ import * as Joi from "joi";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { AUTH_SERVICE } from "@app/common";
 import { HealthModule } from "@app/common/health/health.module";
+import { GraphQLModule } from "@nestjs/graphql";
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from "@nestjs/apollo";
+import { ReservationsResolver } from "./reservations.resolver";
 
 @Module({
   imports: [
     DatabaseModule,
     DatabaseModule.forFeature([Reservation, User, Role, Invoice, Notification]),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
     LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -62,6 +74,6 @@ import { HealthModule } from "@app/common/health/health.module";
     HealthModule,
   ],
   controllers: [ReservationController],
-  providers: [ReservationService, ReservationRepository],
+  providers: [ReservationService, ReservationRepository, ReservationsResolver],
 })
 export class ReservationModule {}
