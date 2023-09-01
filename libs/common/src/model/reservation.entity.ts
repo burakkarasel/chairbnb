@@ -25,13 +25,13 @@ export class Reservation extends AbstractEntity<Reservation> {
   endDate: Date;
   @JoinColumn({ name: "user_id" })
   @ManyToOne(() => User, (user) => user.reservations)
-  @Field()
+  @Field(() => User, { nullable: true })
   user: User;
   @Column({ name: "place_id" })
   @Field()
   placeId: string;
   @OneToOne(() => Invoice, { cascade: true })
   @JoinColumn({ name: "invoice_id" })
-  @Field()
+  @Field(() => Invoice, { nullable: true })
   invoice: Invoice;
 }

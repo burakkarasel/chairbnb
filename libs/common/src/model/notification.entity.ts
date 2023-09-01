@@ -1,4 +1,5 @@
 import { AbstractEntity, User } from "@app/common";
+import { Field, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -8,19 +9,26 @@ import {
 } from "typeorm";
 
 @Entity()
+@ObjectType()
 export class Notification extends AbstractEntity<Notification> {
   @Column()
+  @Field()
   to: string;
   @Column()
+  @Field()
   text: string;
   @JoinColumn({ name: "user_id" })
   @ManyToOne(() => User, (user) => user.notifications)
+  @Field(() => User)
   user: User;
   @Column()
   @CreateDateColumn({ type: "timestamptz" })
+  @Field()
   timestamp: Date;
+  @Field()
   @Column()
   type: string;
+  @Field()
   @Column()
   subject: string;
 }
