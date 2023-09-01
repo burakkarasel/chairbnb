@@ -15,6 +15,12 @@ import {
 } from "@app/common";
 import { PaymentsRepository } from "./payments.repository";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { GraphQLModule } from "@nestjs/graphql";
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from "@nestjs/apollo";
+import { PaymentsResolver } from "./payments.resolver";
 
 @Module({
   imports: [
@@ -44,8 +50,14 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         inject: [ConfigService],
       },
     ]),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
   ],
   controllers: [PaymentsController],
-  providers: [PaymentsService, PaymentsRepository],
+  providers: [PaymentsService, PaymentsRepository, PaymentsResolver],
 })
 export class PaymentsModule {}

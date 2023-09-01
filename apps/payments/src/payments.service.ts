@@ -1,7 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import Stripe from "stripe";
-import { NOTIFICATION_SERVICE, PaymentCreateChargeDto } from "@app/common";
+import {
+  NOTIFICATION_SERVICE,
+  PaymentCreateChargeDto,
+  User,
+} from "@app/common";
 import { PaymentsRepository } from "./payments.repository";
 import { Invoice } from "@app/common";
 import { ClientProxy } from "@nestjs/microservices";
@@ -56,5 +60,12 @@ export class PaymentsService {
     });
 
     return invoice;
+  }
+
+  async listInvoices(user: User) {
+    return this.paymentsRepository.find(
+      { user: { id: user.id } },
+      { user: true },
+    );
   }
 }

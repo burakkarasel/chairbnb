@@ -33,6 +33,10 @@ import { authContext } from "./auth.context";
                 name: "notifications-microservice",
                 url: configService.getOrThrow("NOTIFICATIONS_GRAPHQL_URL"),
               },
+              {
+                name: "payments-microservice",
+                url: configService.getOrThrow("PAYMENTS_GRAPHQL_URL"),
+              },
             ],
           }),
           buildService({ url }) {
