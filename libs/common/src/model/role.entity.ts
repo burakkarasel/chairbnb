@@ -1,9 +1,10 @@
 import { Column, Entity } from "typeorm";
 import { AbstractEntity } from "../database";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ObjectType } from "@nestjs/graphql";
 
 @Entity()
 @ObjectType()
+@Directive("@shareable")
 export class Role extends AbstractEntity<Role> {
   @Column()
   @Field()

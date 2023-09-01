@@ -8,10 +8,11 @@ import {
   OneToOne,
 } from "typeorm";
 import { Invoice, User } from "@app/common";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ObjectType } from "@nestjs/graphql";
 
 @Entity()
 @ObjectType()
+@Directive("@shareable")
 export class Reservation extends AbstractEntity<Reservation> {
   @Column()
   @CreateDateColumn()

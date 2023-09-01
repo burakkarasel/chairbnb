@@ -1,5 +1,5 @@
 import { AbstractEntity, User } from "@app/common";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +10,7 @@ import {
 
 @Entity()
 @ObjectType()
+@Directive("@shareable")
 export class Notification extends AbstractEntity<Notification> {
   @Column()
   @Field()

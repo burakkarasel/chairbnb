@@ -11,6 +11,7 @@ import {
 } from "@app/common";
 import { User } from "@app/common";
 import { LoggerModule } from "@app/common/logger";
+import { UserResolver } from "./user.resolver";
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { LoggerModule } from "@app/common/logger";
     LoggerModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserRepository],
+  providers: [UserService, UserRepository, UserResolver],
   exports: [UserService],
 })
 export class UserModule {}

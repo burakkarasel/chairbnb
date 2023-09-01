@@ -1,5 +1,5 @@
 import { AbstractEntity, User } from "@app/common";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -10,9 +10,9 @@ import {
 
 @Entity()
 @ObjectType()
+@Directive("@shareable")
 export class Invoice extends AbstractEntity<Invoice> {
   @Column({ name: "last_four" })
-  @Field()
   lastFour: string;
   @Column()
   @Field()

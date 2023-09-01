@@ -9,10 +9,11 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Role, Reservation, Invoice, Notification } from "@app/common";
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Directive, Field, ObjectType } from "@nestjs/graphql";
 
 @Entity()
 @ObjectType()
+@Directive("@shareable")
 export class User extends AbstractEntity<User> {
   @Column()
   @Field()

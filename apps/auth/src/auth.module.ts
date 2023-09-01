@@ -9,11 +9,22 @@ import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
 import { JwtStrategy, LocalStrategy } from "./strategy";
 import { HealthModule } from "@app/common/health/health.module";
+import { GraphQLModule } from "@nestjs/graphql";
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from "@nestjs/apollo";
 
 @Module({
   imports: [
     UserModule,
     LoggerModule,
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
