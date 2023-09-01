@@ -13,6 +13,12 @@ import {
   User,
 } from "@app/common";
 import { NotificationRepository } from "./notification.repository";
+import { GraphQLModule } from "@nestjs/graphql";
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from "@nestjs/apollo";
+import { NotificationResolver } from "./notification.resolver";
 
 @Module({
   imports: [
@@ -26,11 +32,21 @@ import { NotificationRepository } from "./notification.repository";
         GOOGLE_OAUTH_REFRESH_TOKEN: Joi.string().required(),
       }),
     }),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+    }),
     LoggerModule,
     DatabaseModule,
     DatabaseModule.forFeature([Notification, User, Role, Invoice, Reservation]),
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService, NotificationRepository],
+  providers: [
+    NotificationsService,
+    NotificationRepository,
+    NotificationResolver,
+  ],
 })
 export class NotificationsModule {}

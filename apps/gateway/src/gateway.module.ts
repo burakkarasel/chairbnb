@@ -29,6 +29,10 @@ import { authContext } from "./auth.context";
                 name: "auth-microservice",
                 url: configService.getOrThrow("AUTH_GRAPHQL_URL"),
               },
+              {
+                name: "notifications-microservice",
+                url: configService.getOrThrow("NOTIFICATIONS_GRAPHQL_URL"),
+              },
             ],
           }),
           buildService({ url }) {

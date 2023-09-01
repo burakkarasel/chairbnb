@@ -2,8 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PushEmailNotificationDto } from "./dto";
 import { ConfigService } from "@nestjs/config";
 import { NotificationRepository } from "./notification.repository";
-import { EmailTypes } from "@app/common";
-import { Notification } from "@app/common";
+import { Notification, User, EmailTypes } from "@app/common";
 
 @Injectable()
 export class NotificationsService {
@@ -37,5 +36,12 @@ export class NotificationsService {
       subject,
       text,
     });*/
+  }
+
+  async listNotifications(user: User): Promise<Notification[]> {
+    return this.notificationRepository.find(
+      { user: { id: user.id } },
+      { user: true },
+    );
   }
 }
